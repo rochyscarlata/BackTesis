@@ -2,62 +2,60 @@ var Producto = require('../models/producto');
 var fs = require('fs');
 var path = require('path');
 
-function registrar(req, res){
-    console.log(req);
-   var data = req.body;
-   if(req.files){
-       var imagen_path = req.files.imagen.path;
-       var name = imagen_path.split('\\')
-       var imagen_name = name[2]
+function registrar(req,res){
+    
+    var data = req.body;
 
-       var producto = new Producto();
-       producto.titulo = data.titulo,
-       producto.descripcion = data.descripcion,
-       producto.imagen = imagen_name,
-       producto.precio_compra = data.precio_compra,
-       producto.precio_venta = data.precio_venta,
-       producto.stock = data.stock,
-       producto.idcategoria = data.idcategoria,
-       producto.puntos = data.puntos,
+    if(req.files){
+        var imagen_path = req.files.imagen.path;
+        var name = imagen_path.split('\\');
+        var imagen_name = name[2];
 
+        var producto = new Producto();
+        producto.titulo = data.titulo;
+        producto.descripcion = data.descripcion;
+        producto.imagen = imagen_name;
+        producto.precio_compra = data.precio_compra;
+        producto.precio_venta = data.precio_venta;
+        producto.stock = data.stock;
+        producto.idcategoria = data.idcategoria;
+        producto.puntos = data.puntos;
 
-       producto.save((err, producto_save)=>{
-           if(err){
-               res.status(500).send({message: 'error en el servidor'});
-           }else{
-               if(producto_save){
-                   res.status(200).send({producto: producto_save});
-               }else{
-                   res.status(403).send({message: 'No se registro el producto'});
-               }
-           }
-       });
-   }else{
-    var producto = new Producto();
-    producto.titulo = data.titulo,
-    producto.descripcion = data.descripcion,
-    producto.imagen = null,
-    producto.precio_compra = data.precio_compra,
-    producto.precio_venta = data.precio_venta,
-    producto.stock = data.stock,
-    producto.idcategoria = data.idcategoria,
-    producto.puntos = data.puntos,
-
-
-    producto.save((err, producto_save)=>{
-        if(err){
-            res.status(500).send({message: 'error en el servidor'});
-        }else{
-            if(producto_save){
-                res.status(200).send({producto: producto_save});
+        producto.save((err,producto_save)=>{
+            if(err){
+                res.status(500).send({message: 'Error en el servidor'});
             }else{
-                res.status(403).send({message: 'No se registro el producto'});
+                if(producto_save){
+                    res.status(200).send({produto: producto_save});
+                }else{
+                    res.status(403).send({message: 'No se registro el producto'}); 
+                }
             }
-        }
-    });
+        });
+    }else{
+        var producto = new Producto();
+        producto.titulo = data.titulo;
+        producto.descripcion = data.descripcion;
+        producto.imagen = null;
+        producto.precio_compra = data.precio_compra;
+        producto.precio_venta = data.precio_venta;
+        producto.stock = data.stock;
+        producto.idcategoria = data.idcategoria;
+        producto.puntos = data.puntos;
 
-   }
-
+        producto.save((err,producto_save)=>{
+            if(err){
+                res.status(500).send({message: 'Error en el servidor'});
+            }else{
+                if(producto_save){
+                    res.status(200).send({produto: producto_save});
+                }else{
+                    res.status(403).send({message: 'No se registro el producto'}); 
+                }
+            }
+        });
+    }
+    
 }
 
 function listar(req,res){
@@ -80,11 +78,13 @@ function editar(req,res){
     var data = req.body;
     var img = req.params['img'];
 
-    if(req.files){
+    if(req.files.imagen){
         
+       if(img || img != null || img != undefined){
         fs.unlink('./uploads/productos/'+img, (err)=>{
             if(err) throw err;
         });
+       }
 
         var imagen_path = req.files.imagen.path;
         var name = imagen_path.split('\\');

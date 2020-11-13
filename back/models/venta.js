@@ -8,4 +8,4 @@ var VentaSchema = Schema({
 
 });
 
-module.exports = mongoose.model('venta', VentaSchema);
+module.exports = mongoose.model('venta',VentaSchema);

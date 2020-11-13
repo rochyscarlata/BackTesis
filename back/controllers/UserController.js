@@ -1,6 +1,7 @@
 var User  = require ('../models/user');
 var bcrypt = require('bcrypt-nodejs');
 var jwt = require('../helpers/jwt');
+const { use } = require('../routes/user');
 
 function registrar(req, res){
     var params = req.body;
@@ -63,8 +64,70 @@ function login (req, res){
  })
 };
 
+function listar(req,res){
+    User.find((err,users_data)=>{
+        if(users_data){
+            res.status(200).send({usuarios: users_data})
+        }
+    })
+}
+
+function editar(req,res){
+    var id = req.params['id'];
+    var data = req.body;
+
+    if(data.password){
+        bcrypt.hash(data.password, null, null, function(err, hash){
+            if(hash){
+                User.findByIdAndUpdate(id,{
+                    nombres: data.nombres,
+                    password: hash, 
+                    email: data.email,
+                    role: data.role,
+                },(err, user_edit) =>{
+                    if(user_edit){
+                        res.status(200).send({user: user_edit})
+                    }else{
+                        res.status(500).send({message: 'El usuario no se pudo editar'})
+                    }
+                })
+                
+            }
+        })
+    }
+    else{
+        User.findByIdAndUpdate(id,{
+            nombres: data.nombres,
+           
+            email: data.email,
+            role: data.role,
+        },(err, user_edit) =>{
+            if(user_edit){
+                res.status(200).send({user: user_edit})
+            }else{
+                res.status(500).send({message: 'El usuario no se pudo editar'})
+            }
+        })
+    }
+  
+    
+}
+function get_user(req,res){
+    var id = req.params['id'];
+
+    User.findById(id, (err,user_data)=>{
+        if(user_data){
+            res.status(200).send({user: user_data});
+        }else{
+            res.status(403).send({message:'No se encontro ningun registro'});
+        }
+    })
+}
 
 module.exports = {
     registrar,
     login,
+    listar,
+    editar,
+    get_user
 }

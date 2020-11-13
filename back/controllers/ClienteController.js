@@ -1,5 +1,15 @@
+const cliente = require('../models/cliente');
 var Cliente = require('../models/cliente');
 
+function listar(req,res){
+    Cliente.find((err,clientes_data)=>{
+        if(clientes_data){
+            res.status(200).send({clientes: clientes_data})
+        }else{
+            res.status(403).send({message: 'no hay clientes en la base de datos'})
+        }
+    })
+}
 
 function registrar(req,res){
     let data = req.body;
@@ -8,6 +18,7 @@ function registrar(req,res){
 
     cliente.nombres = data.nombres;
     cliente.correo = data.correo;
+    cliente.dni = data.dni;
     cliente.puntos = 10;
 
     cliente.save((err, cliente_save)=>{
@@ -20,11 +31,13 @@ function registrar(req,res){
 
 }
 
+
+
 function editar(req, res){
     let id = req.params['id'];
     let data = req.body;
 
-    Cliente.findByIdAndUpdate(id, {nombres: data.nombres, correo: data.correo}, (err, cliente_edit)=>{
+    Cliente.findByIdAndUpdate(id, {nombres: data.nombres,dni: data.dni, correo: data.correo}, (err, cliente_edit)=>{
         if(cliente_edit){
             res.status(200).send({cliente: cliente_edit})
         }else{
@@ -46,10 +59,19 @@ function eliminar(req, res){
     })
 }
 
-
+function get_cliente(req,res){
+    var id = req.params['id'];
+    Cliente.findById(id, (err,cliente_data)=>{
+        if(cliente_data){
+            res.status(200).send({cliente:cliente_data})
+        }
+    })
+}
 
 module.exports = {
     registrar,
     editar,
-    eliminar
+    eliminar,
+    listar,
+    get_cliente
 }

@@ -1,12 +1,10 @@
-var mongoose = require ('mongoose');
+var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var DetalleVentaSchema = Schema({
-    idProducto: {type: Schema.ObjectId, ref: 'producto'},
+    idproducto: {type: Schema.ObjectId, ref:'producto'},
     cantidad: Number,
-    venta: {type:Schema.ObjectId, ref: 'venta'}
-
+    venta: {type:Schema.ObjectId, ref:'venta'}
 });
 
-
-module.exports = mongoose.model('detalleventa', DetalleVentaSchema);
+module.exports = mongoose.model('detalleventa',DetalleVentaSchema);
