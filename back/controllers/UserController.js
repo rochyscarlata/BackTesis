@@ -123,11 +123,21 @@ function get_user(req,res){
         }
     })
 }
-
+function eliminar(req, res){
+    let id = req.params['id'];
+    User.findByIdAndRemove(id, (err, user_delete)=>{
+        if(user_delete){
+            res.status(200).send({user: user_delete})
+        }else{
+            res.status(500).send(err);
+        }
+    })
+}
 module.exports = {
     registrar,
     login,
     listar,
     editar,
-    get_user
+    get_user,
+    eliminar,
 }
