@@ -12,6 +12,7 @@ function registrar(req,res){
         var imagen_name = name[2];
 
         var producto = new Producto();
+        
         producto.titulo = data.titulo;
         producto.descripcion = data.descripcion;
         producto.imagen = imagen_name;

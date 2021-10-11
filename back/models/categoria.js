@@ -8,5 +8,6 @@ var CategoriaSchema = Schema({
 
 });
 
+mongoose.set('useFindAndModify', false);
 
 module.exports = mongoose.model('categoria', CategoriaSchema);
